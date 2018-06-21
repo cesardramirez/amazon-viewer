@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/home/desarrollo/eclipse-workspace/AmazonViewer/libs/makereport.jar"/>
+	<classpathentry kind="lib" path="/home/desarrollo/eclipse-workspace/amazon-viewer/libs/makereport.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
