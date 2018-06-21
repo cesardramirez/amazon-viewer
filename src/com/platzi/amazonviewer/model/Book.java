@@ -1,6 +1,7 @@
 package com.platzi.amazonviewer.model;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -13,6 +14,11 @@ public class Book extends Publication implements IVisualizable {
 	public Book(String title, Date editionDate, String editorial, boolean read) {
 		super(title, editionDate, editorial);
 		this.read = read;
+	}
+	
+	public Book(String title, Date editionDate, String editorial, String[] authors) {
+		super(title, editionDate, editorial);
+		this.setAuthors(authors);
 	}
 
 	public int getId() {
@@ -60,5 +66,19 @@ public class Book extends Publication implements IVisualizable {
 	public void stopToSee(Date dateI, Date dateF) {
 		int result = dateF.getTime() > dateI.getTime() ? (int) (dateF.getTime() - dateI.getTime()) / 1000 : 0;
 		this.setTimeRead(result);
+	}
+	
+	public static ArrayList<Book> makeBookList() {
+		ArrayList<Book> books = new ArrayList<>();
+		String[] authors = new String[3];
+		
+		for (int i = 0; i < 3; i++) {
+			authors[i] = "Author " + i;
+		}
+		for (int i = 1; i <= 5; i++) {
+			books.add(new Book("Book " + i, new Date(), "Editorial " + i, authors));
+		}
+		
+		return books;
 	}
 }

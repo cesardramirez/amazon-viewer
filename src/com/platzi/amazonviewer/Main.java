@@ -1,11 +1,9 @@
 package com.platzi.amazonviewer;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.platzi.amazonviewer.model.Book;
@@ -14,31 +12,15 @@ import com.platzi.amazonviewer.model.Magazine;
 import com.platzi.amazonviewer.model.Movie;
 import com.platzi.amazonviewer.model.Serie;
 import com.platzi.makereport.Report;
+import com.platzi.util.AmazonUtil;
 
 public class Main {
 	static ArrayList<Movie> movies;
 	static ArrayList<Serie> series;
+	static ArrayList<Book> books;
+	static ArrayList<Magazine> magazines;
 	
 	public static void main(String[] args) throws IOException {
-		Movie movie = new Movie("Coco", "Animation", "Lee Unkrich", 120, (short) 2017);
-		movie.setTitle("Rambo");
-		System.out.println(movie);  // Llama por defecto al método toString().
-		
-		// Comparar si dos objetos son iguales según sus atributos y no su dirección en memoria.
-		Magazine magaz1 = new Magazine("Enter.co", new Date(1220227200L), "El Tiempo", new String[]{"El propio"});
-		Magazine magaz2 = new Magazine("Enter.co", new Date(1220227200L), "El Tiempo", new String[]{"El propio"});
-		System.out.println("\n" + (magaz1.equals(magaz2) ? "Same objects" : "Different objects"));
-		
-		// Crea un objeto Book enviando el formato de fecha espececífico.
-		try {
-			Book book = new Book("The Little Prince", new SimpleDateFormat("dd/MM/yyyy").parse("06/04/1943"), "Éditions Gallimard", true);
-			book.setAuthors(new String[]{"Antoine de Saint-Exupéry"});
-			System.out.println(book);
-		} catch (ParseException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println();
 		showMenu();
 	}
 	
@@ -47,37 +29,31 @@ public class Main {
 		boolean exit = false;
 		movies = Movie.makeMoviesList();
 		series = Serie.makeMoviesList();
-		
+		books = Book.makeBookList();
+		magazines = Magazine.makeMagazineList();
+
 		do {
 			System.out.println("*** BIENVENIDOS AMAZON VIEWER ***\n");
-			System.out.print("1. Movies\n2. Series\n3. Books\n4. Magazines\n5. Report\n6. Report Today\n0. Exit\nSelecciona el número de la opción deseada: ");
-			
-			try {
-				int opcion = sc.nextInt();
+			System.out.println("1. Movies\n2. Series\n3. Books\n4. Magazines\n5. Report\n6. Report Today\n0. Exit");
 
-				if (opcion == 0) {
-					System.out.println("Saliendo...");
-					exit = true;
-				} else if (opcion == 1) {
-					showMovies(movies);
-				} else if (opcion == 2) {
-					showSeries(series);
-				} else if (opcion == 3) {
-					showBooks();
-				} else if (opcion == 4) {
-					showMagazines();
-				} else if (opcion == 5) {
-					makeReport();
-				} else if (opcion == 6) {
-					makeReport(new Date());
-				} else {
-					System.out.println("OPCIÓN INVÁLIDA!");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("No es un número... ");
+			int opcion = AmazonUtil.validateUserResponseOptionMenu(0, 6, "Digite una opción del menú: ");
+
+			if (opcion == 0) {
+				System.out.println("Saliendo...");
 				exit = true;
+			} else if (opcion == 1) {
+				showMovies(movies);
+			} else if (opcion == 2) {
+				showSeries(series);
+			} else if (opcion == 3) {
+				showBooks(books);
+			} else if (opcion == 4) {
+				showMagazines();
+			} else if (opcion == 5) {
+				makeReport();
+			} else if (opcion == 6) {
+				makeReport(new Date());
 			}
-			
 			System.out.println();
 		} while (!exit);
 		sc.close();
@@ -87,83 +63,75 @@ public class Main {
 		System.out.println("\n:: MOVIES ::");
 		
 		for (int i = 0; i < movies.size(); i++) {
-			System.out.println((i+1) + ". " + movies.get(i).getTitle() + "\tViewed: " + movies.get(i).isViewed() + "\tTime Viewed: " + movies.get(i).getTimeViewed() + " seg");
+			System.out.println((i + 1) + ". " + movies.get(i).getTitle() + "\tViewed: " + movies.get(i).isViewed() + "\tTime Viewed: " + movies.get(i).getTimeViewed() + " seg");
 		}
 		
-		// Elegir película.
-		System.out.print("Elige la película que deseas ver: ");
-		Scanner sc = new Scanner(System.in);
-		int opcion = sc.nextInt();
+		int opcion = AmazonUtil.validateUserResponseOptionMenu(0, movies.size(), "Elige la película que deseas ver: ");
 		
-		if (opcion > 0) {
-			// Ver película.
-			Movie movieSelected = movies.get(opcion - 1);
-			movieSelected.setViewed(true);
-			Date dateI = movieSelected.startToSee(new Date());
-			
-			seenThread();
-			
-			movieSelected.stopToSee(dateI, new Date());
-			System.out.println("Viste \"" + movieSelected.getTitle() + "\" en " + movieSelected.getTimeViewed() + " segundos !! ");
-		} else {
-			System.out.println("Opción no válida");
-			sc.close();
-		}
+		Movie movieSelected = movies.get(opcion - 1);
+		movieSelected.setViewed(true);
+		Date dateI = movieSelected.startToSee(new Date());
+
+		seenThread();
+
+		movieSelected.stopToSee(dateI, new Date());
+		System.out.println("Viste \"" + movieSelected.getTitle() + "\" en " + movieSelected.getTimeViewed() + " segundos !! ");
 	}
 	
 	public static void showSeries(ArrayList<Serie> series) {
 		System.out.println("\n:: SERIES ::");
 
 		for (int i = 0; i < series.size(); i++) {
-			System.out.println((i+1) + ". " + series.get(i).getTitle() + "\tViewed: " + series.get(i).isViewed());
+			System.out.println((i + 1) + ". " + series.get(i).getTitle() + "\tViewed: " + series.get(i).isViewed());
 		}
 		
-		// Elegir una serie para visualizar los capítulos.
-		System.out.print("Elige la serie que deseas ver: ");
-		Scanner sc = new Scanner(System.in);
-		int serieSelected = sc.nextInt();
-		
-		if (serieSelected > 0) {
-			showChapters(series.get(serieSelected-1).getChapters());
-		} else {
-			System.out.println("Opción no válida");
-			sc.close();
-		}
+		int serieSelected = AmazonUtil.validateUserResponseOptionMenu(0, series.size(), "Elige la serie que deseas ver: ");
+		showChapters(series.get(serieSelected-1).getChapters());
 	}
 
 	public static void showChapters(ArrayList<Chapter> chaptersOfSerieSelected) {
 		System.out.println("\n:: CHAPTERS ::");
 
 		for (int i = 0; i < chaptersOfSerieSelected.size(); i++) {
-			System.out.println((i+1) + ". " + chaptersOfSerieSelected.get(i).getTitle() + "\tViewed: " + chaptersOfSerieSelected.get(i).isViewed());
+			System.out.println((i + 1) + ". " + chaptersOfSerieSelected.get(i).getTitle() + "\tViewed: " + chaptersOfSerieSelected.get(i).isViewed());
 		}
-
-		// Elegir un capítulo de una serie.
-		System.out.print("Elige el capítulo que deseas ver: ");
-		Scanner sc = new Scanner(System.in);
-		int opcion = sc.nextInt();
 		
-		if (opcion > 0) {
-			// Ver capítulo de una serie.
-			Chapter chapterSelected = chaptersOfSerieSelected.get(opcion - 1);
-			chapterSelected.setViewed(true);
-			Date dateI = chapterSelected.startToSee(new Date());
-			
-			seenThread();
-			
-			chapterSelected.stopToSee(dateI, new Date());
-			System.out.println("Viste \"" + chapterSelected.getTitle() + "\" en " + chapterSelected.getTimeViewed() + " segundos !! ");
-		} else {
-			System.out.println("Opción no válida");
-			sc.close();
-		}
+		int opcion = AmazonUtil.validateUserResponseOptionMenu(0, chaptersOfSerieSelected.size(), "Elige el capítulo que deseas ver: ");
+		Chapter chapterSelected = chaptersOfSerieSelected.get(opcion - 1);
+		chapterSelected.setViewed(true);
+		Date dateI = chapterSelected.startToSee(new Date());
+
+		seenThread();
+
+		chapterSelected.stopToSee(dateI, new Date());
+		System.out.println("Viste \"" + chapterSelected.getTitle() + "\" en " + chapterSelected.getTimeViewed() + " segundos !! ");
 	}
 	
-	public static void showBooks() {
+	public static void showBooks(ArrayList<Book> books) {
 		System.out.println("\n:: BOOKS ::");
+		
+		for (int i = 0; i < books.size(); i++) {
+			System.out.println((i + 1) + ". " + books.get(i).getTitle() + "\tRead: " + books.get(i).isRead() + "\tTime Read: " + books.get(i).getTimeRead() + " seg");
+		}
+		
+		int opcion = AmazonUtil.validateUserResponseOptionMenu(0, books.size(), "Elige el libro que deseas leer: ");
+		
+		Book bookSelected = books.get(opcion - 1);
+		bookSelected.setRead(true);
+		Date dateI = bookSelected.startToSee(new Date());
+		
+		seenThread();
+		
+		bookSelected.stopToSee(dateI, new Date());
+		System.out.println("Viste \"" + bookSelected.getTitle() + "\" en " + bookSelected.getTimeRead() + " segundos !! ");
 	}
+	
 	public static void showMagazines() {
 		System.out.println("\n:: MAGAZINES ::");
+		
+		for (int i = 0; i < magazines.size(); i++) {
+			System.out.println((i + 1) + ". " + magazines.get(i).getTitle());
+		}
 	}
 	
 	public static void makeReport() throws IOException {
@@ -179,24 +147,59 @@ public class Main {
 			}
 		}
 		
+		for (Serie serie : series) {
+			ArrayList<Chapter> chapters = serie.getChapters();
+			for (Chapter chapter : chapters) {
+				if (chapter.getIsViewed()) {
+					contentReport += "\n\nTitle Serie: " + serie.getTitle();
+					contentReport += "\n" + chapter;
+				}
+			}
+		}
+		
+		for (Book book : books) {
+			if (book.isRead()) {
+				contentReport += "\n" + book;
+			}
+		}
+		
 		report.setContent(contentReport);
 		report.makeReport();
 		System.out.println("Archivo " + report.getNameFile() + "." + report.getExtension() + " generado!");
 	}
 	
 	public static void makeReport(Date date) throws IOException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-m-ss-S");
 		String dateString = df.format(date);
 		
 		Report report = new Report();
 		report.setNameFile("reporte-" + dateString);
 		report.setExtension("txt");
-		report.setTitle(":: VISTOS ::");
-		String contentReport = report.getTitle();;
+		report.setTitle("\n\n\t:: VISTOS ::");
+		
+		SimpleDateFormat dfNameDays = new SimpleDateFormat("E, W MMM Y, hh:mm:ss a");
+		dateString = dfNameDays.format(date);
+		String contentReport = "Date: " + dateString + report.getTitle();
 		
 		for (Movie movie : movies) {
 			if (movie.getIsViewed()) {
 				contentReport += "\n\n" + movie;
+			}
+		}
+		
+		for (Serie serie : series) {
+			ArrayList<Chapter> chapters = serie.getChapters();
+			for (Chapter chapter : chapters) {
+				if (chapter.getIsViewed()) {
+					contentReport += "\n\nTitle Serie: " + serie.getTitle();
+					contentReport += "\n" + chapter;
+				}
+			}
+		}
+		
+		for (Book book : books) {
+			if (book.isRead()) {
+				contentReport += "\n" + book;
 			}
 		}
 		
