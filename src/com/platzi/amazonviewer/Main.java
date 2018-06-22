@@ -22,7 +22,6 @@ public class Main {
 	static ArrayList<Magazine> magazines;
 	
 	public static void main(String[] args) throws IOException {
-		//Film film = new Movie("Movie x", "Genre x", "Creator x", 120, (short) 2018);
 		showMenu();
 	}
 	

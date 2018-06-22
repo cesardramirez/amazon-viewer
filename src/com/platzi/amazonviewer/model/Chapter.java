@@ -69,7 +69,7 @@ public class Chapter extends Movie {
 		}
 		
 		if (chapterViewedCounter == chapters.size()) {
-			this.getSerie().setViewed(true);
+			this.getSerie().view();
 		}
 	}
 }
