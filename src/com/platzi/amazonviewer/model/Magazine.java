@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * <h1>Magazine</h1>
+ * <p>Te permite crear las revistas pero no visualizarlas. Se maneja a especie de catálogo.
+ * Hereda de {@link Publication}</p>
+ * 
+ * @author Cesar Ramírez
+ * @version 1.1
+ * @since 2018
+ **/
 public class Magazine extends Publication {
 	private int id;
 	

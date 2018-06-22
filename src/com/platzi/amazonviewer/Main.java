@@ -15,6 +15,17 @@ import com.platzi.amazonviewer.model.Serie;
 import com.platzi.makereport.Report;
 import com.platzi.util.AmazonUtil;
 
+/**
+ * <h1>AmazonViewer</h1>
+ * AmazonViewer es un programa que permite visualizar Movies, Series con sus respetivos Chapters, Books y Magazines.
+ * <p>
+ * Existen algunas reglas como todos los elementos pueden ser visualizados o leídos a excepción de las Magazines, estas sólo pueden ser vistas a modo de exposición sin ser leídas.
+ * </p>
+ * 
+ * @author Cesar Ramírez
+ * @version 1.1
+ * @since 2018
+ **/
 public class Main {
 	static ArrayList<Movie> movies;
 	static ArrayList<Serie> series;

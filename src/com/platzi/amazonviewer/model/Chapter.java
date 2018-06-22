@@ -2,6 +2,11 @@ package com.platzi.amazonviewer.model;
 
 import java.util.ArrayList;
 
+/**
+ * Hereda de {@link Movie}
+ * @see Film
+ * @author Cesar Ramírez
+ **/
 public class Chapter extends Movie {
 	private int id;
 	private int seasonNumber;
@@ -46,6 +51,11 @@ public class Chapter extends Movie {
 				"\nDuration: " + this.getDuration();
 	}
 
+	/**
+	 * Método que crea una lista de capitulos aleatoria para una serie.
+	 * @param serie objeto {@code Serie} para crear una lista de capítulos.
+	 * @return {@code ArrayList} que crea 5 capítulos de una serie de manera aleatoria.
+	 */
 	public static ArrayList<Chapter> makeChaptersList(Serie serie) {
 		ArrayList<Chapter> chapters = new ArrayList<>();
 		
@@ -56,6 +66,10 @@ public class Chapter extends Movie {
 		return chapters;
 	}
 	
+	/**
+	 * Recorre todos los capítulos de una serie y si todos han sido vistos, coloca la serie como vista.
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void view() {
 		super.view();

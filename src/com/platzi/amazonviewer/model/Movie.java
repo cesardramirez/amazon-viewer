@@ -5,6 +5,12 @@ import java.util.Date;
 
 import com.platzi.util.AmazonUtil;
 
+/**
+ * Hereda de {@link Film} e
+ * Implementa de {@link IVisualizable}
+ * 
+ * @author Cesar Ramírez
+ **/
 public class Movie extends Film implements IVisualizable {
 	public int id;
 	private int timeViewed;
@@ -35,11 +41,17 @@ public class Movie extends Film implements IVisualizable {
 				"\nDuration: " + this.getDuration();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 **/
 	@Override
 	public Date startToSee(Date dateI) {
 		return dateI;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 **/
 	@Override
 	public void stopToSee(Date dateI, Date dateF) {
 	  int result = dateF.getTime() > dateI.getTime() ? (int) (dateF.getTime() - dateI.getTime()) / 1000 : 0;
@@ -56,6 +68,10 @@ public class Movie extends Film implements IVisualizable {
 		return movies;
 	}
 
+	/**
+	 * <p>Método que maneja un comportamiento de una visualización en n segundos.</p>
+	 * {@inheritDoc}
+	 **/
 	@Override
 	public void view() {
 		this.setViewed(true);

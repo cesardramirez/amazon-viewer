@@ -12,7 +12,7 @@ public class AmazonUtil {
 			while (!sc.hasNextInt()) {
 				System.out.println("No es un número!");
 				System.out.print(message);
-				sc.next(); // this is important!
+				sc.next(); // esto es importante!
 			}
 			responseOption = sc.nextInt();
 			if (!(responseOption >= oMin && responseOption <= oMax)) System.out.println("Opción inválida !!");
