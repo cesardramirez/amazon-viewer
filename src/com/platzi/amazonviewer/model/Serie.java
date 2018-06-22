@@ -44,13 +44,20 @@ public class Serie extends Film {
 				"\nDuration: " + this.getDuration();
 	}
 	
-	public static ArrayList<Serie> makeMoviesList() {
+	public static ArrayList<Serie> makeSeriesList() {
 		ArrayList<Serie> series = new ArrayList<>();
 		
 		for (int i = 1; i <= 5; i++) {
-			series.add(new Serie("Serie " + i, "Genre " + i, "Creator " + i, 1200 + i, 5 + i, Chapter.makeChaptersList()));
+			Serie serie = new Serie("Serie " + i, "Genre " + i, "Creator " + i, 1200 + i, 5 + i);
+			serie.setChapters(Chapter.makeChaptersList(serie));
+			series.add(serie);
 		}
 		
 		return series;
+	}
+
+	@Override
+	public void view() {
+		// TODO Auto-generated method stub
 	}
 }

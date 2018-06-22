@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import com.platzi.util.AmazonUtil;
+
 public class Book extends Publication implements IVisualizable {
 	private int id;
 	private String isbn;
@@ -31,9 +33,12 @@ public class Book extends Publication implements IVisualizable {
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
-	public boolean isRead() {
-		return read;
+	public String isRead() {
+		return read ? "Yes" : "No";
 	}
+	public boolean getIsRead() {
+		return read;
+	}	
 	public void setRead(boolean read) {
 		this.read = read;
 	}
@@ -80,5 +85,15 @@ public class Book extends Publication implements IVisualizable {
 		}
 		
 		return books;
+	}
+	
+	public void view() {
+		this.setRead(true);
+		Date dateI = this.startToSee(new Date());
+		
+		AmazonUtil.seenThread();
+		
+		this.stopToSee(dateI, new Date());
+		System.out.println("Viste \"" + this.getTitle() + "\" en " + this.getTimeRead() + " segundos !! ");
 	}
 }

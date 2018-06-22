@@ -20,4 +20,14 @@ public class AmazonUtil {
 		
 		return responseOption;
 	}
+	
+	public static void seenThread() {
+		try {
+			byte min = 1, max = 5;
+			long num_random = (long) Math.floor(Math.random() * (max - min + 1)) + min;
+			Thread.sleep(num_random * 1000);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
 }

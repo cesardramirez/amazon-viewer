@@ -3,6 +3,8 @@ package com.platzi.amazonviewer.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.platzi.util.AmazonUtil;
+
 public class Movie extends Film implements IVisualizable {
 	public int id;
 	private int timeViewed;
@@ -53,4 +55,15 @@ public class Movie extends Film implements IVisualizable {
 		
 		return movies;
 	}
+
+	@Override
+	public void view() {
+		this.setViewed(true);
+		Date dateI = this.startToSee(new Date());
+		
+		AmazonUtil.seenThread();
+
+		this.stopToSee(dateI, new Date());
+		System.out.println("Viste \"" + this.getTitle() + "\" en " + this.getTimeViewed() + " segundos !! ");		
+	}	
 }
