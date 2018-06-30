@@ -3,6 +3,7 @@ package com.platzi.amazonviewer.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.platzi.amazonviewer.dao.MovieDAO;
 import com.platzi.util.AmazonUtil;
 
 /**
@@ -11,10 +12,12 @@ import com.platzi.util.AmazonUtil;
  * 
  * @author Cesar Ramírez
  **/
-public class Movie extends Film implements IVisualizable {
+public class Movie extends Film implements IVisualizable, MovieDAO {
 	public int id;
 	private int timeViewed;
 	
+	public Movie() {
+	}
 	
 	public Movie(String title, String genre, String creator, int duration, short year) {
 		super(title, genre, creator, duration); // Hereda del constructor padre 'Film'
@@ -24,7 +27,10 @@ public class Movie extends Film implements IVisualizable {
 	public int getId() {
 		return id;
 	}
-	
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public int getTimeViewed() {
 		return timeViewed;
 	}
@@ -59,13 +65,8 @@ public class Movie extends Film implements IVisualizable {
 	}
 	
 	public static ArrayList<Movie> makeMoviesList() {
-		ArrayList<Movie> movies = new ArrayList<>();
-		
-		for (int i = 1; i <= 5; i++) {
-			movies.add(new Movie("Movie " + i, "Genre " + i, "Creator " + i, 120 + i, (short) (2017 + i)));
-		}
-		
-		return movies;
+		Movie movie = new Movie();
+		return movie.read();
 	}
 
 	/**
@@ -78,6 +79,9 @@ public class Movie extends Film implements IVisualizable {
 		Date dateI = this.startToSee(new Date());
 		
 		AmazonUtil.seenThread();
+		
+		Movie movie = new Movie();
+		movie.setMovieViewed(this);
 
 		this.stopToSee(dateI, new Date());
 		System.out.println("Viste \"" + this.getTitle() + "\" en " + this.getTimeViewed() + " segundos !! ");		

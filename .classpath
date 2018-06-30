@@ -11,5 +11,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/amazon-viewer/doc/makeReportDoc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/mysql-connector-java-5.1.22.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
