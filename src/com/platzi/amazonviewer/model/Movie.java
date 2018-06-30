@@ -68,6 +68,11 @@ public class Movie extends Film implements IVisualizable, MovieDAO {
 		Movie movie = new Movie();
 		return movie.read();
 	}
+	
+	public static ArrayList<Movie> makeMoviesListDate(Date date) {
+		Movie movie = new Movie();
+		return movie.getMoviesViewedByDate(date);
+	}	
 
 	/**
 	 * <p>Método que maneja un comportamiento de una visualización en n segundos.</p>

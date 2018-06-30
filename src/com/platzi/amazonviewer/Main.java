@@ -1,6 +1,7 @@
 package com.platzi.amazonviewer;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class Main {
 
 		do {
 			System.out.println("*** BIENVENIDOS AMAZON VIEWER ***\n");
-			System.out.println("1. Movies\n2. Series\n3. Books\n4. Magazines\n5. Report\n6. Report Today\n7. Exit");
+			System.out.println("1. Movies\n2. Series\n3. Books\n4. Magazines\n5. Report\n6. Report Date\n7. Exit");
 
 			int opcion = AmazonUtil.validateUserResponseOptionMenu(1, 7, "Digite una opción del menú: ");
 
@@ -64,7 +65,13 @@ public class Main {
 			} else if (opcion == 5) {
 				makeReport();
 			} else if (opcion == 6) {
-				makeReport(new Date());
+				try {
+					System.out.print("Digite la fecha del reporte a generar en formato yyyy-MM-dd: ");
+					Date dateE = new SimpleDateFormat("yyyy-MM-dd").parse(sc.nextLine());
+					makeReport(dateE);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 			System.out.println();
 		} while (!exit);
@@ -162,22 +169,24 @@ public class Main {
 	}
 	
 	public static void makeReport(Date date) throws IOException {
+		Date dateToday = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-m-ss-S");
-		String dateString = df.format(date);
+		String dateString = df.format(dateToday);
 		
 		Report report = new Report();
 		report.setNameFile("reporte-" + dateString);
 		report.setExtension("txt");
-		report.setTitle("\n\n\t:: VISTOS ::");
+		report.setTitle("\n\n\t:: VISTOS - " + new SimpleDateFormat("EEE, d MMM yyyy").format(date) + " ::");
 		
-		SimpleDateFormat dfNameDays = new SimpleDateFormat("E, W MMM Y, hh:mm:ss a");
-		dateString = dfNameDays.format(date);
-		String contentReport = "Date: " + dateString + report.getTitle();
+		SimpleDateFormat dfNameDays = new SimpleDateFormat("EE, d MMM Y, hh:mm:ss a");
+		dateString = dfNameDays.format(dateToday);
+		String contentReport = "Report date: " + dateString + report.getTitle();
 		
-		for (Movie movie : movies) {
-			if (movie.getIsViewed()) {
-				contentReport += "\n\n" + movie;
-			}
+		ArrayList<Movie> movies_date = new ArrayList<>();
+		movies_date = Movie.makeMoviesListDate(date);
+		
+		for (Movie movie : movies_date) {
+			contentReport += "\n\n" + movie;
 		}
 		
 		for (Serie serie : series) {
