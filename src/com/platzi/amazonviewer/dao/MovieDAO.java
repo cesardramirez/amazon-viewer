@@ -61,9 +61,6 @@ public interface MovieDAO extends IDBConnection {
 				movie.setViewed(true);
 				movies.add(movie);
 			}
-			
-			System.out.println(movies.size());
-			
 			preparedStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

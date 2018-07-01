@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import com.platzi.amazonviewer.model.Book;
 import com.platzi.amazonviewer.model.Chapter;
@@ -81,9 +83,9 @@ public class Main {
 	public static void showMovies(ArrayList<Movie> movies) {
 		System.out.println("\n:: MOVIES ::");
 		
-		for (int i = 0; i < movies.size(); i++) {
-			System.out.println((i + 1) + ". " + movies.get(i).getTitle() + "\tViewed: " + movies.get(i).isViewed() + "\tTime Viewed: " + movies.get(i).getTimeViewed() + " seg");
-		}
+		// Lambda para imprimir una movie.
+		AtomicInteger atomicInteger = new AtomicInteger(1);
+		movies.forEach(m -> System.out.println(atomicInteger.getAndIncrement() + ". " + m.getTitle() + "\tViewed: " + m.isViewed() + "\tTime Viewed: " + m.getTimeViewed() + " seg"));
 		
 		int opcion = AmazonUtil.validateUserResponseOptionMenu(1, movies.size(), "Elige la película que deseas ver: ");
 		Film movieSelected = movies.get(opcion - 1);
@@ -139,31 +141,28 @@ public class Main {
 		report.setNameFile("reporte");
 		report.setExtension("txt");
 		report.setTitle(":: VISTOS ::");
-		String contentReport = report.getTitle();;
+		StringBuilder contentReport = new StringBuilder(report.getTitle());
 		
-		for (Movie movie : movies) {
-			if (movie.getIsViewed()) {
-				contentReport += "\n\n" + movie;
-			}
-		}
+		movies.stream()
+			.filter(m -> m.getIsViewed()) // Predicate - filter()
+			.forEach(m -> contentReport.append("\n\n" + m)); // Consumer - forEach()
 		
-		for (Serie serie : series) {
-			ArrayList<Chapter> chapters = serie.getChapters();
-			for (Chapter chapter : chapters) {
-				if (chapter.getIsViewed()) {
-					contentReport += "\n\nTitle Serie: " + serie.getTitle();
-					contentReport += "\n" + chapter;
-				}
-			}
-		}
+		Consumer<Serie> seriesEach = s -> {
+			ArrayList<Chapter> chapters = s.getChapters();
+			chapters.stream()
+				.filter(c-> c.getIsViewed())
+				.forEach(c -> {
+					contentReport.append("\n\nTitle Serie: " + s.getTitle());
+					contentReport.append("\n" + c);
+					});
+		};
+		series.stream().forEach(seriesEach);
 		
-		for (Book book : books) {
-			if (book.getIsRead()) {
-				contentReport += "\n" + book;
-			}
-		}
+		books.stream()
+			.filter(b -> b.getIsRead())
+			.forEach(b -> contentReport.append("\n\n" + b));
 		
-		report.setContent(contentReport);
+		report.setContent(contentReport.toString());
 		report.makeReport();
 		System.out.println("Archivo " + report.getNameFile() + "." + report.getExtension() + " generado!");
 	}

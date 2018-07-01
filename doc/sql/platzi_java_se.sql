@@ -38,4 +38,7 @@ CREATE TABLE `platzi_java_se`.`viewed` (
   `id_user` int(11) NOT NULL,
   PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `platzi_java_se`.`viewed` (`id`, `id_material`, `id_element`, `id_user`) VALUES (1, 1, 6, 2);
+INSERT INTO `platzi_java_se`.`viewed` (`id`, `id_material`, `id_element`, `id_user`) VALUES (2, 1, 10, 2);
+
 ALTER TABLE `platzi_java_se`.`viewed` ADD COLUMN `datetime` DATETIME NOT NULL AFTER `id_user`;
