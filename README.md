@@ -1,2 +1,2 @@
 # amazon-viewer
-Platzi - Java SE Basic - Amazon Viewer
+Platzi - Java SE Basic & Advanced - Amazon Viewer
